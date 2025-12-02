@@ -45,7 +45,50 @@ def draw_prizes(quantity: int) -> List[str]:
     return rng.choices(PRIZES, weights=DEFAULT_WEIGHTS, k=quantity)
 
 # ----- Streamlit Interface -----
-st.title("🎁 LUCKYDRAW")
+
+# Custom CSS for fonts, button, and cards
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
+
+.title {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+.sub-title {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 32px;
+    color: #555555;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+.stButton>button {
+    width: 100% !important;
+    background-color: #FFC0CB;
+    color: black;
+    height: 40px;
+    font-size: 16px;
+}
+.prize-card {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    background-color: #FFDEE9;
+    margin: 5px;
+    text-align: center;
+    line-height: 80px;
+    font-weight: bold;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# Titles
+st.markdown('<div class="title">🎁 LUCKYDRAW</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-title">🎁 럭키드로우</div>', unsafe_allow_html=True)
 
 # User input field
 quantity = st.number_input("Quantity of prize:", min_value=1, max_value=40, value=1, step=1)
@@ -55,8 +98,10 @@ if st.button("GO!"):
     try:
         prizes = draw_prizes(quantity)
         st.success("🎉 Your randomized prizes:")
-        # Show prizes in a box
-        prize_text = "\n".join(f"{i+1}. {prize}" for i, prize in enumerate(prizes))
-        st.text_area("Prizes", value=prize_text, height=200)
+
+        # Display prizes as cards
+        prize_cards_html = ''.join([f'<div class="prize-card">{prize}</div>' for prize in prizes])
+        st.markdown(f'<div>{prize_cards_html}</div>', unsafe_allow_html=True)
+
     except ValueError as e:
         st.error(f"Error: {e}")
