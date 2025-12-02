@@ -57,18 +57,16 @@ def draw_prizes(quantity: int, unique: bool = False, seed: Optional[int] = None,
             return [rng.choice(PRIZES) for _ in range(quantity)]
 
 # ----- Streamlit Interface -----
-st.title("🎁 Lucky Draw Simulator")
+st.title("🎁 LUCKYDRAW ")
 
 # User input field
-quantity = st.number_input("Quantity of prize:", min_value=1, max_value=10, value=1, step=1)
+quantity = st.number_input("Quantity:", min_value=1, max_value=40, value=1, step=1)
 
 # Optional: Unique & Tiered toggles
-unique = st.checkbox("Draw unique prizes (no duplicates)")
-tiered = st.checkbox("Use tiered (weighted) draw", value=True)
+
 
 # Seed input (optional)
-seed_input = st.text_input("Optional seed for reproducible results", "")
-seed = int(seed_input) if seed_input.isdigit() else None
+
 
 # GO! button
 if st.button("GO!"):
