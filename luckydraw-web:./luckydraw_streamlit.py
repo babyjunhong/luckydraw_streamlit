@@ -1,7 +1,6 @@
 from __future__ import annotations
 import random
-from collections import Counter
-from typing import List, Optional
+from typing import List
 import streamlit as st
 
 # ----- Prize Data -----
@@ -39,39 +38,22 @@ def weighted_sample_without_replacement(population: List[str], weights: List[flo
     return result
 
 # ----- Prize Draw Function -----
-def draw_prizes(quantity: int, unique: bool = False, seed: Optional[int] = None, tiered: bool = True, weights: Optional[List[float]] = None) -> List[str]:
+def draw_prizes(quantity: int) -> List[str]:
     if quantity < 1:
-        raise ValueError("quantity must be at least 1")
-    rng = random.Random(seed)
-    if weights is None:
-        weights = DEFAULT_WEIGHTS
-
-    if unique:
-        if quantity > len(PRIZES):
-            raise ValueError(f"quantity must be <= {len(PRIZES)} when drawing unique prizes")
-        return weighted_sample_without_replacement(PRIZES, weights, quantity, rng) if tiered else rng.sample(PRIZES, k=quantity)
-    else:
-        if tiered:
-            return rng.choices(PRIZES, weights=weights, k=quantity)
-        else:
-            return [rng.choice(PRIZES) for _ in range(quantity)]
+        raise ValueError("Quantity must be at least 1")
+    rng = random.Random()
+    return rng.choices(PRIZES, weights=DEFAULT_WEIGHTS, k=quantity)
 
 # ----- Streamlit Interface -----
-st.title("🎁 LUCKYDRAW ")
+st.title("🎁 LUCKYDRAW")
 
 # User input field
-quantity = st.number_input("Quantity:", min_value=1, max_value=40, value=1, step=1)
-
-# Optional: Unique & Tiered toggles
-
-
-# Seed input (optional)
-
+quantity = st.number_input("Quantity of prize:", min_value=1, max_value=40, value=1, step=1)
 
 # GO! button
 if st.button("GO!"):
     try:
-        prizes = draw_prizes(quantity, unique=unique, seed=seed, tiered=tiered)
+        prizes = draw_prizes(quantity)
         st.success("🎉 Your randomized prizes:")
         # Show prizes in a box
         prize_text = "\n".join(f"{i+1}. {prize}" for i, prize in enumerate(prizes))
